@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.23">
+<file name="/Users/cuibingqi/git/rpc/src/main/java/com/cbq/rpc/net/server/NettyServerHandler.java">
+</file>
+<file name="/Users/cuibingqi/git/rpc/src/main/java/com/cbq/rpc/net/client/NettyClientHandler.java">
+</file>
+<file name="/Users/cuibingqi/git/rpc/src/main/java/com/cbq/rpc/test/TestClient.java">
+<error line="11" column="60" severity="error" message="&apos;8100&apos; 是一个魔术数字（直接常数）。" source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+</file>
+<file name="/Users/cuibingqi/git/rpc/src/main/java/com/cbq/rpc/test/Hello.java">
+</file>
+<file name="/Users/cuibingqi/git/rpc/src/main/java/com/cbq/rpc/test/HelloServiceImpl.java">
+</file>
+<file name="/Users/cuibingqi/git/rpc/src/main/java/com/cbq/rpc/test/TestService.java">
+<error line="12" column="24" severity="error" message="&apos;8100&apos; 是一个魔术数字（直接常数）。" source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+</file>
+<file name="/Users/cuibingqi/git/rpc/src/main/java/com/cbq/rpc/utils/JacksonUtils.java">
+</file>
+<file name="/Users/cuibingqi/git/rpc/src/main/java/com/cbq/rpc/protocol/Decoder.java">
+</file>
+<file name="/Users/cuibingqi/git/rpc/src/main/java/com/cbq/rpc/protocol/TestJson.java">
+</file>
+<file name="/Users/cuibingqi/git/rpc/src/main/java/com/cbq/rpc/protocol/Encoder.java">
+</file>
+<file name="/Users/cuibingqi/git/rpc/src/main/java/com/cbq/rpc/protocol/TestPb.java">
+</file>
+<file name="/Users/cuibingqi/git/rpc/src/main/java/com/cbq/rpc/model/RpcRequest.java">
+</file>
+<file name="/Users/cuibingqi/git/rpc/src/main/java/com/cbq/rpc/model/RpcResponse.java">
+</file>
+<file name="/Users/cuibingqi/git/rpc/src/main/java/com/cbq/rpc/service/ClientTransportService.java">
+</file>
+<file name="/Users/cuibingqi/git/rpc/src/main/java/com/cbq/rpc/rpc/RpcClient.java">
+</file>
+<file name="/Users/cuibingqi/git/rpc/src/main/java/com/cbq/rpc/rpc/RpcProxy.java">
+</file>
+<file name="/Users/cuibingqi/git/rpc/src/main/java/com/cbq/rpc/rpc/RpcServer.java">
+<error line="53" column="56" severity="error" message="&apos;;&apos; 后应有空格。" source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck"/>
+</file>
+</checkstyle>

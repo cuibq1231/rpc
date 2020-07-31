@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+
+package cbq.learn.proto.java;
+
+option java_package = "com.cbq.learn.proto.java";
+option java_outer_classname = "GreeterImpl";
+option objc_class_prefix = "PBGame";
+
+service Greeter {
+    rpc SayHello (HelloRequest) returns (HelloReply) {}
+}
+message HelloRequest {
+    string name = 1;
+}
+message HelloReply {
+    string message = 1;
+}
