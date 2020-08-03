@@ -7,6 +7,7 @@ import com.cbq.rpc.utils.JacksonUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -35,7 +36,6 @@ public class NettyClientHandler extends ChannelHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext context) throws Exception {
         this.ctx = context;
-        super.channelActive(context);
     }
 
     public RpcResponse sendRequest(RpcRequest rpcRequestParam) throws InterruptedException {
@@ -48,6 +48,13 @@ public class NettyClientHandler extends ChannelHandlerAdapter {
             System.err.println("send request failed");
         }
         return rpcResponse;
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        System.err.println("client handle exception,");
+        cause.printStackTrace();
+        ctx.close();
     }
 
     /**
