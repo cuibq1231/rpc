@@ -21,6 +21,7 @@ import lombok.ToString;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
 public class RpcRequest {
+    private String traceId; //请求唯一标识
     private String serviceName; //调用服务全路径
     private String methodName; //调用方法名称
     private Class<?>[] paramTypeList; //方法参数类型数组

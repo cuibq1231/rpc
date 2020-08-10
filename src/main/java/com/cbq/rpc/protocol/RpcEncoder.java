@@ -10,7 +10,13 @@ import io.netty.handler.codec.MessageToByteEncoder;
  * @author cuibq <cuibq@kuaishou.com>
  * Created on 2020-04-26
  */
-public class Encoder extends MessageToByteEncoder<Object> {
+public class RpcEncoder extends MessageToByteEncoder<Object> {
+//    private Class<?> genericClass;
+//
+//    public RpcEncoder(Class<?> genericClass) {
+//        this.genericClass = genericClass;
+//    }
+//
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, Object in, ByteBuf byteBuf) throws Exception {
         byte[] bytes = JacksonUtils.serialize2Bytes(in);

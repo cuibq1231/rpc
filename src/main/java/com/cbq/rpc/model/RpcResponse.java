@@ -21,5 +21,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RpcResponse {
+    private String traceId;//请求唯一标示
     private Object result; //返回结果
 }

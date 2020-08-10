@@ -2,10 +2,11 @@ package com.cbq.rpc.rpc;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.UUID;
 import java.util.stream.Stream;
 
+import com.cbq.rpc.model.RpcFuture;
 import com.cbq.rpc.model.RpcRequest;
-import com.cbq.rpc.model.RpcResponse;
 import com.cbq.rpc.net.client.NettyClientHandler;
 
 /**
@@ -20,28 +21,23 @@ public class RpcProxy<T> implements InvocationHandler {
     }
 
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) {
-//        if (args == null || proxy == null || method == null) {
-//            System.out.println("call method proxy exception, clazz=" + clazz);
-//            return null;
-//        }
-        RpcRequest request = new RpcRequest();
-        request.setMethodName(method.getName());
-        request.setServiceName(method.getDeclaringClass().getName());
+    public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
+        RpcRequest.RpcRequestBuilder request =
+                RpcRequest.builder().traceId(UUID.randomUUID().toString()).methodName(method.getName())
+                        .serviceName(clazz.getName());
         if (args.length > 0) {
-            request.setParamTypeList(Stream.of(args).map(Object::getClass).toArray(Class[]::new));
-            request.setParamValueList(args);
+            request.paramTypeList(Stream.of(args).map(Object::getClass).toArray(Class[]::new)).paramValueList(args);
         }
         NettyClientHandler clientHandler = RpcClient.getClientHandler();
         if (clientHandler == null) {
             System.err.println("get client handle error");
             return null;
         }
-        RpcResponse response;
+        RpcFuture future;
         try {
-            response = clientHandler.sendRequest(request);
-            if (response != null) {
-                return response.getResult();
+            future = clientHandler.sendRequest(request.build());
+            if (future != null && future.isDone()) {
+                return future.get();
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

@@ -2,7 +2,10 @@ package com.cbq.rpc.rpc;
 
 import java.lang.reflect.Proxy;
 
+import com.cbq.rpc.model.RpcResponse;
 import com.cbq.rpc.net.client.NettyClientHandler;
+import com.cbq.rpc.protocol.RpcDecoder;
+import com.cbq.rpc.protocol.RpcEncoder;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
@@ -56,6 +59,8 @@ public class RpcClient {
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel socketChannel) {
+                    socketChannel.pipeline().addLast(new RpcEncoder());
+                    socketChannel.pipeline().addLast(new RpcDecoder(RpcResponse.class));
                     socketChannel.pipeline().addLast(clientHandler);
                 }
             });
@@ -63,18 +68,6 @@ public class RpcClient {
             if (channelFuture.isSuccess()) {
                 System.out.println("连接服务器成功");
             }
-            //注册关闭事件
-//            channelFuture.channel().closeFuture().addListener(cfl -> {
-//                //关闭客户端套接字
-//                if (channelFuture.channel() != null) {
-//                    channelFuture.channel().close();
-//                }
-//                //关闭客户端线程组
-//                if (eventLoopGroup != null) {
-//                    eventLoopGroup.shutdownGracefully();
-//                }
-//                System.out.println("客户端[" + channelFuture.channel().localAddress().toString() + "]已断开...");
-//            });
         } catch (Exception e) {
             System.err.println("连接服务器失败。。。ip：" + host + "post:" + serverPort);
         }

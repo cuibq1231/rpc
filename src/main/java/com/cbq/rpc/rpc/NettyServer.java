@@ -1,6 +1,9 @@
 package com.cbq.rpc.rpc;
 
+import com.cbq.rpc.model.RpcRequest;
 import com.cbq.rpc.net.server.NettyServerHandler;
+import com.cbq.rpc.protocol.RpcDecoder;
+import com.cbq.rpc.protocol.RpcEncoder;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -16,18 +19,11 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
  * @author cuibq <cuibq@kuaishou.com>
  * Created on 2020-04-14
  */
-public class RpcServer {
+public class NettyServer {
     private int port;
 
-    /**
-     * 注册端口号
-     */
-    public void forPort(int port) {
+    public NettyServer(int port) {
         this.port = port;
-        //        RpcServer rr = new RpcServer();
-        //        Class clazz = rr.getClass();
-        //        Method method = clazz.getDeclaredMethod()
-        //        method.invoke()
     }
 
 
@@ -50,6 +46,9 @@ public class RpcServer {
                 @Override
                 protected void initChannel(SocketChannel socketChannel) {
                     ChannelPipeline p = socketChannel.pipeline();
+                    //可以添加多个handle，添加的顺序决定处理顺序
+                    p.addLast(new RpcDecoder(RpcRequest.class));
+                    p.addLast(new RpcEncoder());
                     p.addLast(new NettyServerHandler());// 添加NettyServerHandler，用来处理Server端接收和处理消息的逻辑
                 }
             });

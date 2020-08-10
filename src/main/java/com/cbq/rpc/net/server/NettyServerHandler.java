@@ -4,30 +4,26 @@ import java.lang.reflect.Method;
 
 import com.cbq.rpc.model.RpcRequest;
 import com.cbq.rpc.model.RpcResponse;
-import com.cbq.rpc.utils.JacksonUtils;
+import com.cbq.rpc.service.RpcServer;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 
 /**
  * @author cuibq <cuibq@kuaishou.com>
  * Created on 2020-04-26
  */
-public class NettyServerHandler extends ChannelHandlerAdapter {
+public class NettyServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        ByteBuf buf = (ByteBuf) msg;
         try {
-            ctx.writeAndFlush(getRpcResponse(buf));
-            System.out.println("服务器回复消息：你好，客户端");
+            RpcRequest rpcRequest = (RpcRequest) msg;
+            //TODO 使用线程池处理
+            //ctx的write会从当前的handle传播事件， ctx.channel().write()是从tail开始传播
+            ctx.writeAndFlush(getRpcResponse(rpcRequest));
         } catch (Exception e) {
             System.err.println("channelRead server error");
             e.printStackTrace();
-        } finally {
-            //发送到网络netty会自动处理
-            //            ReferenceCountUtil.release(msg);
         }
     }
 
@@ -37,26 +33,15 @@ public class NettyServerHandler extends ChannelHandlerAdapter {
         ctx.close();
     }
 
-    private ByteBuf getRpcResponse(ByteBuf request) {
+    private RpcResponse getRpcResponse(RpcRequest rpcRequest) {
         try {
-            //根据request获取response
-            byte[] reqByte = new byte[request.readableBytes()];
-            request.readBytes(reqByte);
-            RpcRequest rpcRequest = JacksonUtils.deserialize(reqByte, RpcRequest.class);
-            RpcResponse response;
             if (rpcRequest == null) {
                 throw new Exception("deserialize request error");
             }
-            Class cls = Class.forName("com.cbq.rpc.test.HelloServiceImpl");
+            Class cls = Class.forName(RpcServer.getClass(rpcRequest.getServiceName()).getName());
             Method m = cls.getDeclaredMethod(rpcRequest.getMethodName(), rpcRequest.getParamTypeList());
             Object result = m.invoke(cls.newInstance(), rpcRequest.getParamValueList());
-            response = RpcResponse.builder().result(result).build();
-
-            byte[] responseBytes = JacksonUtils.serialize2Bytes(response);
-            ByteBuf pingMessage = Unpooled.buffer();
-            pingMessage.writeBytes(responseBytes);
-
-            return pingMessage;
+            return RpcResponse.builder().traceId(rpcRequest.getTraceId()).result(result).build();
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("getRpcResponse server error");
