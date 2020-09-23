@@ -4,6 +4,7 @@ import com.cbq.rpc.model.RpcRequest;
 import com.cbq.rpc.net.server.NettyServerHandler;
 import com.cbq.rpc.protocol.RpcDecoder;
 import com.cbq.rpc.protocol.RpcEncoder;
+import com.cbq.rpc.zk.ZkClient;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -56,6 +57,8 @@ public class NettyServer {
             if (channelFuture.isSuccess()) {
                 System.out.println("netty start success，port：" + this.port);
             }
+            //服务注册
+            ZkClient.getInstance().register(port);
             // 关闭连接
             channelFuture.channel().closeFuture().sync();
 

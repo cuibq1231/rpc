@@ -12,6 +12,5 @@ public class TestClient {
         Hello hello = client.createRpcService(Hello.class);
         String result = hello.sayHello("chenchen");
         System.out.println("get result:" + result);
-
     }
 }
